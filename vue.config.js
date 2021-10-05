@@ -1,5 +1,4 @@
 module.exports = {
-
     devServer: {
         proxy: {
             '^/api': {
@@ -9,5 +8,11 @@ module.exports = {
                 pathRewrite: { '^/api': '/' }
             }
         }
+    },
+
+    publicPath: '',
+
+    pluginOptions: {
+      cordovaPath: 'vue-android-app'
     }
 }
