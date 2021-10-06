@@ -2,7 +2,6 @@ import { createRouter, createWebHistory } from 'vue-router'
 
 import About from '../pages/About'
 import Home from '../pages/Home'
-
 const routes = [
 
     {
@@ -14,6 +13,10 @@ const routes = [
         path: '/about',
         name: "About",
         component: About,
+    },
+    {
+        path: "/:catchAll(.*)",
+        redirect: "/"
     }
 ]
 

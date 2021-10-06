@@ -27,50 +27,32 @@ export default {
   methods:{
    async deleteTask(id){
       if(confirm('Are u sure ?')){
-      const res =await fetch(`api/tasks/${id}`,{
-        method:"delete"
-      })
-      res.status===200?(      this.tasks = this.tasks.filter(t=>t.id!==id)):alert('somthing wrong')
+      let tasks =JSON.parse(localStorage.getItem('tasks'))
+      tasks = tasks.filter(t=>t.id!==id)
+      localStorage.setItem('tasks',JSON.stringify(tasks))
+      this.tasks = tasks    
 }
     },
 
    async toggleReminder(id){
-      const task = await( await this.fetchTask(id) ).json()
-      let newTask = {...task,reminder:!task.reminder}
-      if(task.id){
-        const updatedTask = await fetch('api/tasks/'+id,{
-          method:"put",
-          headers:{
-            'Content-type':'application/json'
-          } ,
-          body:JSON.stringify(newTask)
-        })
-        console.log(updatedTask);
-      this.tasks=this.tasks.map(t=>t.id===id?{...t,reminder:!t.reminder}:t)
-      } 
+     
+        this.tasks = this.tasks.map(t=>t.id===id?{...t,reminder:!t.reminder}:t)
+        localStorage.setItem('tasks',JSON.stringify(this.tasks))
     },
-
-
   async addTask(data){
 
-      const res =await( await fetch('api/tasks',{
-        method:"post",
-        headers:{
-          'Content-type':'application/json',
-        },
-          body : JSON.stringify(data)
-
-      })).json()
-     this.tasks.push(res)
-     this.showAddTask=false
+      data.id = this.tasks.length
+      this.tasks.push(data)
+      localStorage.setItem('tasks',JSON.stringify(this.tasks))
 },
 async fetchTasks(){
-  const res = await(await fetch('api/tasks')).json()
-   this.tasks = res
+  const res = JSON.parse(localStorage.getItem('tasks'))
+  if(!res) localStorage.setItem('tasks',JSON.stringify([]))
+   this.tasks = res||[]
 },
 
 async fetchTask (id){
-   return await fetch(`api/tasks/${id}`)
+   return this.tasks.find(t=>t.id===id)
 }
 
   },
